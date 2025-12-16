@@ -1,6 +1,5 @@
 import requests
 import json
-from typing import List
 
 URL = "https://recruitment.sandboxnu.com/api/eyJkYXRhIjp7ImNoYWxsZW5nZSI6IkZsb3ciLCJlbWFpbCI6ImppYW5nLmhlaUBub3J0aGVhc3Rlcm4uZWR1IiwiZHVlRGF0ZSI6IjIwMjUtMTItMTlUMDU6MDA6MDAuMDAwWiJ9LCJoYXNoIjoiUmhDdUx2SFBub3dYQjZ1M1RCVSJ9"
 
@@ -16,7 +15,7 @@ def get_avg_round_score(has_played: bool, rounds, session_ids):
     
     return round(sum(scores) / len(scores), 2)
 
-def get_avg_session_duration(has_played: bool, sessions: List, session_ids: List) -> str | float:
+def get_avg_session_duration(has_played: bool, sessions: list, session_ids: list) -> str | float:
     if not has_played:
         return "N/A"
     
@@ -30,7 +29,7 @@ def get_avg_session_duration(has_played: bool, sessions: List, session_ids: List
     
     return round(sum(durations) / len(durations), 2)
 
-def get_participant_stats(participant: dict, sessions: List, rounds: List) -> dict:
+def get_participant_stats(participant: dict, sessions: list, rounds: list) -> dict:
     id = participant["participantId"]
     # identify if the participant has played any rounds to prevent checking in multiple functions
     has_played = True if len(participant["sessions"]) > 0 else False
@@ -50,7 +49,6 @@ def main():
         data = json.load(file)
 
     # data = requests.get(URL).json()
-    # print(data)
     
     statistics = []
     sessions = data["sessions"]
@@ -59,6 +57,8 @@ def main():
     for participant in data["participantInfo"]:
         participant_stats = get_participant_stats(participant, sessions, rounds)
         statistics.append(participant_stats)
+
+    # TODO: sort statistics alphabetically
     
     print(statistics)
 
