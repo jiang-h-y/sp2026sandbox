@@ -19,7 +19,7 @@ def process_rounds(rounds):
 def process_sessions(sessions, rounds_data):
     """ Aggregates sessions data by participant """
     sessions_data = defaultdict(lambda: defaultdict(float))
-    languages = defaultdict(lambda: defaultdict(float))
+    languages = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
 
     for s in sessions:
         participant = sessions_data[s["participantId"]]
@@ -28,14 +28,30 @@ def process_sessions(sessions, rounds_data):
         participant["session_count"] += 1
         participant["round_count"] += rounds_data[s["sessionId"]]["count"]
 
-        participant_language = languages[(s["participantId"], s["language"])]
+        participant = languages[s["participantId"]]
+        participant_language = participant[s["language"]]
         participant_language["round_score_sum"] += rounds_data[s["sessionId"]]["score_sum"]
         participant_language["round_duration_sum"] += rounds_data[s["sessionId"]]["duration_sum"]
         participant_language["round_count"] += rounds_data[s["sessionId"]]["count"]
 
     return sessions_data, languages
 
-def aggregate_by_participant(participants, sessions_data):
+def process_languages(languages):
+    processed = {}
+
+    for key, val in languages.items():
+        processed[key] = []
+
+        for language, stats in val.items():
+            language_data = {}
+            language_data["language"] = language
+            language_data["averageScore"] = stats["round_score_sum"] / stats["round_count"]
+            language_data["averageRoundDuration"] = stats["round_duration_sum"] / stats["round_count"]
+            processed[key].append(language_data)
+    
+    return processed
+
+def aggregate_by_participant(participants, sessions_data, languages):
     participants_data = []
 
     for p in participants:
@@ -44,13 +60,12 @@ def aggregate_by_participant(participants, sessions_data):
         individual["id"] = id
         individual["name"] = p["name"]
 
-        individual["languages"] = []
-
         if len(p["sessions"]) == 0:
+            individual["languages"] = []
             individual["averageRoundScore"] = "N/A"
             individual["averageSessionDuration"] = "N/A"
         else:
-            languages_data = {}
+            individual["languages"] = languages[id]
             individual["averageRoundScore"] = sessions_data[id]["round_score_sum"] / sessions_data[id]["round_count"]
             individual["averageSessionDuration"] = sessions_data[id]["session_duration_sum"] / sessions_data[id]["session_count"]
         
@@ -62,7 +77,7 @@ def main():
     with open("sample_data.json", "r") as file:
         data = json.load(file)
     
-    # data = requests.get(URL).json()
+    data = requests.get(URL).json()
 
     rounds = data["rounds"]
     sessions = data["sessions"]
@@ -70,9 +85,9 @@ def main():
 
     rounds_data = process_rounds(rounds)
     sessions_data, languages = process_sessions(sessions, rounds_data)
-    participants_data = aggregate_by_participant(participants, sessions_data)
-    print(languages)
-    # print(participants_data)
+    languages = process_languages(languages)
+    participants_data = aggregate_by_participant(participants, sessions_data, languages)
+    print(participants_data)
 
 if __name__ == "__main__":
     main()
