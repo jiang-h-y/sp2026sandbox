@@ -1,5 +1,5 @@
 ## Data Definition
-Full input data: `list[dict]`
+Full input data: `dict[str, list]`
 
 The input data contains three dictionaries for: (1) sessions, (2) rounds, and (3) participants.
 
@@ -37,7 +37,7 @@ I understand that these diagrams are not ideal for modeling JSON data because th
 <img width="1260" height="1288" alt="image" src="https://github.com/user-attachments/assets/dcdc068a-059c-495f-8ef2-b8cb06a8f22f" />
 
 ## How to run my solution
-Run `main.py`
+Run: `main.py` (may need to install `requirements.txt`)
 
 Repo structure:  
 `test_main.py`: tests for my solution  
@@ -56,18 +56,18 @@ I thought this was the best way to approach the problem because it handled each 
 
 Although I never took the Fundies track, I know some of the most basic design principles about making each function do only one job and avoiding repitive code. For my first attempt at implementing my solution, I iterated through each part of the data once and performed my aggregations/computations. However, this version was extremely unreadable, and the functions were not as modular as I wanted them to be.
 
-I redesigned the solution twice to make it more readable and modular, but this did require me to do additional iterations through the data, which sacrifices some efficiency. I thought this sacrifice was necessary though because of the more important improvements in readability and modularity. In total, this challenge took me around 15 hours.
+I redesigned the solution twice to make it more readable and modular by separating out the tasks into smaller steps. For example, I added a function just for processing the languages data. This did require me to perform additional iterations through the data, which sacrificed some efficiency. I thought this sacrifice was necessary because of the more important improvements in readability and modularity. In total, this challenge took me around 15 hours.
 
 ## Technical challenges
 The two biggest technical challenges I faced were:
 1. Deciding on the right data structure to use
 2. Unit testing
 
-In the intermediary steps of data processing, I had to decide how to store my data. I mostly used default dictionaries to store my data because dictionary keys must be unique, so it allowed me to make each ID a unique key and aggregate data as the values for the keys. Furthermore, dictionaries allow for quick and easy access to data. The reason I used default dictionaries was to avoid the extra step of making an if-else statement to check if the ID was already in the dictionary.
+In the intermediary steps of data processing, I had to decide how to store my data. I mostly used default dictionaries to store my intermediary data because dictionary keys must be unique. This allowed me to make each ID a unique key and aggregate data as the values for the keys. Furthermore, dictionaries allow for quick and easy access to data. The reason I used default dictionaries was to avoid the extra step of making an if-else statement to check if the ID was already in the dictionary.
 
-However, this was extremely difficult for me because the data became very nested, which was difficult to understand and work with. I'm also used to working with data in data science projects where it's typically organized as a dataframe, so this hierarchical structure was new to me. 
+However, deciding on this data structure was extremely difficult for me because the data became very nested, which was difficult to understand and work with. I'm also used to working with data science projects where the data is typically organized as a dataframe, so this hierarchical structure was new to me. 
 
-I thought about using alternative data structures, such as a dictionary of lists instead of a dictionary of dictionaries. This would reduce the readability of the data though. I also thought about making the ID correspond to the index of the data in a list to prevent extremely nested data. This was difficult to implement too because the data is not given in order of ID, so you can't assign the first item of  a list to index 5, for example. Therefore, I ultimately decided that dictionaries with ID keys were the best possible data structure I could think of.
+I thought about using alternative data structures, such as a dictionary of lists instead of a dictionary of dictionaries. This would reduce the readability of the data because there would be no names attributed to each value (e.g. [5, 100] instead of {"score": 5, "duration": 100}). I also thought about designing the data structure as a list of dictionaries, where the index in the list corresponded to the data's ID and the dictionaries provided the values. This was difficult to implement too because the data is not given in order of ID, so you have to pre-define a list of a certain length for this to work. Therefore, I ultimately decided that dictionaries with ID keys were the best possible data structure I could think of.
 
 Unit testing was difficult for me as well because I don't have much practice with it. As I was writing my tests, I felt like my inputs and outputs were extremely complicated and cumbersome, and it made me lose confidence in my solution. On the other hand, writing tests did help me realize that I could break down some of my functions into smaller functions, so I revised my solution several times during the testing process. I'm still not sure if I did my testing correctly because the tests seemed overly complicated, but I just tried to test every function and get as much coverage as possible.
 
