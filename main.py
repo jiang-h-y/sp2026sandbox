@@ -1,3 +1,12 @@
+"""
+main.py
+Heidi Jiang
+Spring 2026 Sandbox Caterpillar Challenge
+
+A program that gets data from the endpoint, transforms it, and posts it back 
+to the endpoint.
+"""
+
 import requests
 from collections import defaultdict
 import copy

@@ -1,3 +1,10 @@
+"""
+test_main.py
+Heidi Jiang
+
+Tests functions in main.py
+"""
+
 import pytest
 from main import *
 import json
