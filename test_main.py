@@ -190,10 +190,10 @@ def test_sort_participants():
 
 def test_end_to_end():
     """ Tests the end-to-end pipeline using the given sample data/solution """
-    with open("sample_data.json", "r") as file:
+    with open("test_data/sample_data.json", "r") as file:
         data = json.load(file)
 
-    with open("sample_solution.json", "r") as file:
+    with open("test_data/sample_solution.json", "r") as file:
         solution = json.load(file)
     
     rounds = data["rounds"]
