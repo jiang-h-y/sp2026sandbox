@@ -74,9 +74,6 @@ def aggregate_by_participant(participants, sessions_data, languages):
     return participants_data
 
 def main():
-    with open("sample_data.json", "r") as file:
-        data = json.load(file)
-    
     data = requests.get(URL).json()
 
     rounds = data["rounds"]

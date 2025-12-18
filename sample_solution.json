@@ -1,0 +1,38 @@
+[
+  {
+		"id": 0,
+    "name": "Kurapika Kurta",
+    "languages": [{
+										"language": "Japanese",
+										"averageScore": 7,
+										"averageRoundDuration": 500
+										},
+									{
+										"language": "French",
+										"averageScore": 6.5,
+										"averageRoundDuration": 80
+										}
+								  ],
+    "averageRoundScore": 6.75,
+    "averageSessionDuration": 386.67
+  },
+  {
+		"id": 1,
+    "name": "Levi Ackerman",
+    "languages": [{
+										"language": "German",
+										"averageScore": 9,
+										"averageRoundDuration": 200
+										}
+								  ],
+    "averageRoundScore": 9,
+    "averageSessionDuration": 200
+  },
+  {
+		"id": 2,
+    "name": "Tanjiro Kamado",
+    "languages": [],
+    "averageRoundScore": "N/A",
+    "averageSessionDuration": "N/A"
+  }
+]
