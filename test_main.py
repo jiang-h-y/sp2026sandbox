@@ -21,8 +21,8 @@ def test_group_by_session():
     {"sessionId": 1, "score": 2, "startTime": 100, "endTime": 800}
     ]
     solution2 = {
-    0: {"score_sum": 7, "round_duration_sum": 100},
-    1: {"score_sum": 2, "round_duration_sum": 700}
+    0: {"score_sum": 7, "round_duration_sum": 100, "max_score": 7},
+    1: {"score_sum": 2, "round_duration_sum": 700, "max_score": 2}
     }
     assert group_by_session(rounds2) == solution2
 
@@ -32,7 +32,7 @@ def test_group_by_session():
     {"sessionId": 0, "score": 2, "startTime": 100, "endTime": 800}
     ]
     solution3 = {
-    0: {"score_sum": 9, "round_duration_sum": 800}
+    0: {"score_sum": 9, "round_duration_sum": 800, "max_score": 7}
     }
     assert group_by_session(rounds3) == solution3
 

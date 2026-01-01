@@ -7,9 +7,11 @@ A program that gets data from the endpoint, transforms it, and posts it back
 to the endpoint.
 """
 
+import json
 import requests
 from collections import defaultdict
 import copy
+import pprint
 
 URL = "https://recruitment.sandboxnu.com/api/eyJkYXRhIjp7ImNoYWxsZW5nZSI6IkZsb3ciLCJlbWFpbCI6ImppYW5nLmhlaUBub3J0aGVhc3Rlcm4uZWR1IiwiZHVlRGF0ZSI6IjIwMjUtMTItMTlUMDU6MDA6MDAuMDAwWiJ9LCJoYXNoIjoiUmhDdUx2SFBub3dYQjZ1M1RCVSJ9"
 
@@ -29,7 +31,8 @@ def group_by_session(rounds):
     # initializes necessary stats
     session_stats = defaultdict(lambda: {
         "score_sum": 0.0, 
-        "round_duration_sum": 0.0
+        "round_duration_sum": 0.0,
+        "max_score": 0.0
         })
 
     for r in rounds:
@@ -38,6 +41,9 @@ def group_by_session(rounds):
 
         session["score_sum"] += r["score"]
         session["round_duration_sum"] += r["endTime"] - r["startTime"]
+
+        if r["score"] > session["max_score"]:
+            session["max_score"] = r["score"]
 
     return session_stats
 
@@ -120,9 +126,10 @@ def group_by_participant_language(sessions):
     language_stats = defaultdict(lambda: defaultdict(lambda: {
         "score_sum": 0.0, 
         "round_duration_sum": 0.0, 
-        "round_count": 0
+        "round_count": 0,
+        "max_score": 0
         }))
-
+    
     for s in sessions:
         # identify which participant/language pair the session belongs to
         participant = language_stats[s["participantId"]]
@@ -131,6 +138,9 @@ def group_by_participant_language(sessions):
         language["score_sum"] += s["score_sum"]
         language["round_duration_sum"] += s["round_duration_sum"]
         language["round_count"] += len(s["rounds"])
+
+        if s["max_score"] > language["max_score"]:
+            language["max_score"] = s["max_score"]
 
     return language_stats
 
@@ -184,6 +194,7 @@ def flatten_languages(languages):
         flattened["language"] = language
         flattened["averageScore"] = round(stats["score_sum"] / stats["round_count"], 2)
         flattened["averageRoundDuration"] = round(stats["round_duration_sum"] / stats["round_count"], 2)
+        flattened["maxScore"] = round(stats["max_score"], 2)
         flattened_lst.append(flattened)
     
     return flattened_lst
@@ -314,15 +325,19 @@ def main():
     # load data
     data = requests.get(URL).json()
 
+    # with open("test_data/sample_data.json", "r") as file:
+    #     data = json.load(file)
+
     # identify separate parts of the data
     rounds = data["rounds"]
     sessions = data["sessions"]
     participants = data["participantInfo"]
 
     output = process_data(rounds, sessions, participants)
+    pprint.pprint(output)
 
-    response = requests.post(url=URL, json=output)
-    print(response, response.text)
+    # response = requests.post(url=URL, json=output)
+    # print(response, response.text)
 
 if __name__ == "__main__":
     main()
